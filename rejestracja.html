@@ -17,16 +17,18 @@
 				<h2>Formularz rejestracyjny</h2>
 			</div>
 			<div class="col-xs-12">
-				<c:if test="${not empty message}">
-				    <div class="alert alert-danger" role="alert">
-						Wystąpił błąd podczas rejestracji. ${message} Spróbuj ponownie.
-					</div>
-				</c:if>
-				<c:else>
-					<div class="alert alert-success" role="alert">
-						Udało Ci się zarejestrować! Powróć do <a href="index.jsp">strony głównej</a> i rozpocznij korzystanie z serwisu!
-					</div>
-				</c:else>
+				<c:choose>
+				    <c:when test="${not empty message}">
+				       	<div class="alert alert-danger" role="alert">
+							Wystąpił błąd podczas rejestracji. ${message} Spróbuj ponownie.
+						</div>
+				    </c:when>
+				    <c:otherwise>
+				        <div class="alert alert-success" role="alert">
+							Udało Ci się zarejestrować! Powróć do <a href="index.html">strony głównej</a> i rozpocznij korzystanie z serwisu!
+						</div>
+				    </c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<div class="row">
