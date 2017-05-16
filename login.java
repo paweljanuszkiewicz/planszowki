@@ -97,7 +97,9 @@ public class Login extends HttpServlet {
 				query.close();
 				out.print(imie);
 				HttpSession session = request.getSession();
+				session.setAttribute("logged", true);
 				session.setAttribute("imie", imie);
+				session.setAttribute("login", login);
 			}
 			request.setAttribute("message", message);
 			request.getRequestDispatcher("/login.jsp").forward(request, response);
