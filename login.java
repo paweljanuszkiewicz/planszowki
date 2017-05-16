@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class Login
@@ -61,7 +62,9 @@ public class Login extends HttpServlet {
 		Connection connection;
 		Statement command;
 		ResultSet checkUser = null;
+		ResultSet checkName = null;
 		int countUser = 0;
+		String imie = "";
 		
 		try {
 		    Class.forName("com.mysql.jdbc.Driver");
@@ -84,12 +87,19 @@ public class Login extends HttpServlet {
 			if (countUser != 1)  {
 				message = "Błędny login lub hasło.";
 				request.setAttribute("message", message);
-				request.getRequestDispatcher("/rejestracja.jsp").forward(request, response);
+				request.getRequestDispatcher("/login.jsp").forward(request, response);
 				return;
 			}
 			else {
-				message = "Prawie Zalogowany";
+				checkName = command.executeQuery("SELECT imie FROM uzytkownicy WHERE login = '" + login + "' and haslo = '" + haslo + "';");
+				if (checkName.first()) {
+					imie = checkUser.getString(1);
+				}
+				checkName.close();
+				HttpSession session=request.getSession();
+				session.setAttribute("name", imie);
 			}
+			request.setAttribute("message", message);
 			request.getRequestDispatcher("/login.jsp").forward(request, response);
 		} 
 		catch (SQLException e) {
