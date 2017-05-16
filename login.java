@@ -61,8 +61,7 @@ public class Login extends HttpServlet {
 		String connectionString = "jdbc:mysql://localhost:3306/planszowki?verifyServerCertificate=false&useSSL=true";
 		Connection connection;
 		Statement command;
-		ResultSet checkUser = null;
-		ResultSet checkName = null;
+		ResultSet query = null;
 		int countUser = 0;
 		String imie = "";
 		
@@ -78,25 +77,26 @@ public class Login extends HttpServlet {
 			connection = DriverManager.getConnection(connectionString, "root", "password");
 			command = connection.createStatement();
 			
-			checkUser = command.executeQuery("SELECT COUNT(login) FROM uzytkownicy WHERE login = '" + login + "' and haslo = '" + haslo + "';");
-			if (checkUser.first()) {
-				countUser = checkUser.getInt(1);
+			query = command.executeQuery("SELECT COUNT(login) FROM uzytkownicy WHERE login = '" + login + "' and haslo = '" + haslo + "';");
+			if (query.first()) {
+				countUser = query.getInt(1);
 			}
-			checkUser.close();
 			
 			if (countUser != 1)  {
 				message = "Błędny login lub hasło.";
 				request.setAttribute("message", message);
 				request.getRequestDispatcher("/login.jsp").forward(request, response);
+				query.close();
 				return;
 			}
 			else {
-				checkName = command.executeQuery("SELECT imie FROM uzytkownicy WHERE login = '" + login + "' and haslo = '" + haslo + "';");
-				if (checkName.first()) {
-					imie = checkUser.getString(1);
+				query = command.executeQuery("SELECT imie FROM uzytkownicy WHERE login = '" + login + "' and haslo = '" + haslo + "';");
+				if (query.first()) {
+					imie = query.getString(1);
 				}
-				checkName.close();
-				HttpSession session=request.getSession();
+				query.close();
+				out.print(imie);
+				HttpSession session = request.getSession();
 				session.setAttribute("name", imie);
 			}
 			request.setAttribute("message", message);
